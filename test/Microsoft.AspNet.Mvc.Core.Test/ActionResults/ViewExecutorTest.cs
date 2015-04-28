@@ -38,18 +38,17 @@ namespace Microsoft.AspNet.Mvc
                         new byte[] { 97, 98, 99, 100 }
                     },
                     {
-                        MediaTypeHeaderValue.Parse("text/foo;p1=p1-value"),
+                        MediaTypeHeaderValue.Parse("text/foo; p1=p1-value"),
                         "text/foo; p1=p1-value; charset=utf-8",
                         new byte[] { 97, 98, 99, 100 }
                     },
                     {
-                        // This is with BOM
-                        new MediaTypeHeaderValue("text/foo") { Encoding = Encoding.UTF8 },
+                        new MediaTypeHeaderValue("text/foo") { Charset = "utf-8" },
                         "text/foo; charset=utf-8",
-                        new byte[] { 239, 187, 191, 97, 98, 99, 100 }
+                        new byte[] { 97, 98, 99, 100 }
                     },
                     {
-                        new MediaTypeHeaderValue("text/foo") {Encoding = Encoding.ASCII },
+                        new MediaTypeHeaderValue("text/foo") { Charset = "us-ascii" },
                         "text/foo; charset=us-ascii",
                         new byte[] { 97, 98, 99, 100 }
                     }

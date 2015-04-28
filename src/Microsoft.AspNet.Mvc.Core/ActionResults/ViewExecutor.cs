@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace Microsoft.AspNet.Mvc
         private const int BufferSize = 1024;
         private static readonly MediaTypeHeaderValue DefaultContentType = new MediaTypeHeaderValue("text/html")
         {
-            Encoding = Encodings.UTF8EncodingWithoutBOM
+            Charset = Encodings.UTF8EncodingWithoutBOM.WebName
         };
 
         /// <summary>
@@ -37,31 +38,44 @@ namespace Microsoft.AspNet.Mvc
         {
             var response = actionContext.HttpContext.Response;
 
-            // Encoding property on MediaTypeHeaderValue does not return the exact encoding instance that
-            // is set, so any settings(for example: BOM) on it will be lost when retrieving the value.
-            // In the scenario where the user does not supply encoding, we want to use UTF8 without BOM and
-            // for this reason do not rely on Encoding property.
-            MediaTypeHeaderValue contentTypeHeader;
+            MediaTypeHeaderValue contentTypeHeader = contentType;
             Encoding encoding;
-            if (contentType == null)
+            if (contentTypeHeader == null)
             {
-                encoding = Encodings.UTF8EncodingWithoutBOM;
                 contentTypeHeader = DefaultContentType;
+                encoding = Encodings.UTF8EncodingWithoutBOM;
             }
             else
             {
-                if (contentType.Encoding == null)
+                if (string.IsNullOrEmpty(contentTypeHeader.Charset))
                 {
                     encoding = Encodings.UTF8EncodingWithoutBOM;
+
                     // 1. Do not modify the user supplied content type
                     // 2. Parse here to handle parameters apart from charset
-                    contentTypeHeader = MediaTypeHeaderValue.Parse(contentType.ToString());
-                    contentTypeHeader.Encoding = encoding;
+                    contentTypeHeader = MediaTypeHeaderValue.Parse(contentTypeHeader.ToString());
+                    contentTypeHeader.Charset = encoding.WebName;
                 }
                 else
                 {
-                    encoding = contentType.Encoding;
-                    contentTypeHeader = contentType;
+                    if(string.Equals(
+                        contentTypeHeader.Charset,
+                        Encodings.UTF8EncodingWithoutBOM.WebName,
+                        StringComparison.OrdinalIgnoreCase))
+                    {
+                        encoding = Encodings.UTF8EncodingWithoutBOM;
+                    }
+                    else if(string.Equals(
+                        contentTypeHeader.Charset,
+                        Encodings.UTF16EncodingLittleEndian.WebName,
+                        StringComparison.OrdinalIgnoreCase))
+                    {
+                        encoding = Encodings.UTF16EncodingLittleEndian;
+                    }
+                    else
+                    {
+                        encoding = Encoding.GetEncoding(contentTypeHeader.Charset);
+                    }
                 }
             }
 
@@ -69,11 +83,7 @@ namespace Microsoft.AspNet.Mvc
 
             var wrappedStream = new StreamWrapper(response.Body);
 
-            using (var writer = new StreamWriter(
-                wrappedStream,
-                encoding,
-                BufferSize,
-                leaveOpen: true))
+            using (var writer = new StreamWriter(wrappedStream, encoding, BufferSize, leaveOpen: true))
             {
                 try
                 {
