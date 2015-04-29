@@ -74,7 +74,7 @@ namespace Microsoft.AspNet.Mvc
                     }
                     else
                     {
-                        encoding = Encoding.GetEncoding(contentTypeHeader.Charset);
+                        encoding = new ResponseEncodingWrapper(Encoding.GetEncoding(contentTypeHeader.Charset));
                     }
                 }
             }
