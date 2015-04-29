@@ -60,7 +60,7 @@ namespace Microsoft.AspNet.Mvc
 
             if (Content != null)
             {
-                await response.WriteAsync(Content, new ResponseEncodingWrapper(encoding));
+                await response.WriteAsync(Content, encoding);
             }
         }
     }

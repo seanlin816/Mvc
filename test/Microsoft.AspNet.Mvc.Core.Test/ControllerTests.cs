@@ -632,7 +632,7 @@ namespace Microsoft.AspNet.Mvc.Test
             // Assert
             Assert.NotNull(result);
             Assert.Same(fileContents, result.FileContents);
-            Assert.Equal("application/pdf", result.ContentType?.ToString());
+            Assert.Equal("application/pdf", result.ContentType.ToString());
             Assert.Equal(string.Empty, result.FileDownloadName);
         }
 
@@ -649,7 +649,7 @@ namespace Microsoft.AspNet.Mvc.Test
             // Assert
             Assert.NotNull(result);
             Assert.Same(fileContents, result.FileContents);
-            Assert.Equal("application/pdf", result.ContentType?.ToString());
+            Assert.Equal("application/pdf", result.ContentType.ToString());
             Assert.Equal("someDownloadName", result.FileDownloadName);
         }
 
@@ -666,7 +666,7 @@ namespace Microsoft.AspNet.Mvc.Test
             // Assert
             Assert.NotNull(result);
             Assert.Equal(path, result.FileName);
-            Assert.Equal("application/pdf", result.ContentType?.ToString());
+            Assert.Equal("application/pdf", result.ContentType.ToString());
             Assert.Equal(string.Empty, result.FileDownloadName);
         }
 
@@ -683,7 +683,7 @@ namespace Microsoft.AspNet.Mvc.Test
             // Assert
             Assert.NotNull(result);
             Assert.Equal(path, result.FileName);
-            Assert.Equal("application/pdf", result.ContentType?.ToString());
+            Assert.Equal("application/pdf", result.ContentType.ToString());
             Assert.Equal("someDownloadName", result.FileDownloadName);
         }
 
@@ -705,7 +705,7 @@ namespace Microsoft.AspNet.Mvc.Test
             // Assert
             Assert.NotNull(result);
             Assert.Same(fileStream, result.FileStream);
-            Assert.Equal("application/pdf", result.ContentType?.ToString());
+            Assert.Equal("application/pdf", result.ContentType.ToString());
             Assert.Equal(string.Empty, result.FileDownloadName);
         }
 
@@ -728,7 +728,7 @@ namespace Microsoft.AspNet.Mvc.Test
             // Assert
             Assert.NotNull(result);
             Assert.Same(fileStream, result.FileStream);
-            Assert.Equal("application/pdf", result.ContentType?.ToString());
+            Assert.Equal("application/pdf", result.ContentType.ToString());
             Assert.Equal("someDownloadName", result.FileDownloadName);
             mockHttpContext.Verify(
                 x => x.Response.OnResponseCompleted(It.IsAny<Action<object>>(), It.IsAny<object>()),
@@ -996,7 +996,7 @@ namespace Microsoft.AspNet.Mvc.Test
             Assert.IsType<ContentResult>(actualContentResult);
             Assert.Equal("TestContent", actualContentResult.Content);
             Assert.Null(actualContentResult.ContentType.Encoding);
-            Assert.Equal("text/plain", actualContentResult.ContentType?.ToString());
+            Assert.Equal("text/plain", actualContentResult.ContentType.ToString());
         }
 
         [Fact]
@@ -1012,7 +1012,7 @@ namespace Microsoft.AspNet.Mvc.Test
             Assert.IsType<ContentResult>(actualContentResult);
             Assert.Equal("TestContent", actualContentResult.Content);
             Assert.Same(Encoding.UTF8, actualContentResult.ContentType.Encoding);
-            Assert.Equal("text/plain; charset=utf-8", actualContentResult.ContentType?.ToString());
+            Assert.Equal("text/plain; charset=utf-8", actualContentResult.ContentType.ToString());
         }
 
         [Fact]

@@ -79,29 +79,33 @@ namespace Microsoft.AspNet.Mvc
             Assert.Equal("text/plain; charset=utf-7", httpContext.Response.ContentType);
         }
 
-        public static TheoryData<MediaTypeHeaderValue, string, byte[]> ContentResultContentTypeData
+        public static TheoryData<MediaTypeHeaderValue, string, string, byte[]> ContentResultContentTypeData
         {
             get
             {
-                return new TheoryData<MediaTypeHeaderValue, string, byte[]>
+                return new TheoryData<MediaTypeHeaderValue, string, string, byte[]>
                 {
                     {
                         null,
+                        "κόσμε",
                         "text/plain; charset=utf-8",
-                        new byte[] { 97, 98, 99, 100 } //utf-8 without BOM
+                        new byte[] { 206, 186, 225, 189, 185, 207, 131, 206, 188, 206, 181 } //utf-8 without BOM
                     },
                     {
                         new MediaTypeHeaderValue("text/foo"),
+                        "κόσμε",
                         "text/foo; charset=utf-8",
-                        new byte[] { 97, 98, 99, 100 } //utf-8 without BOM
+                        new byte[] { 206, 186, 225, 189, 185, 207, 131, 206, 188, 206, 181 } //utf-8 without BOM
                     },
                     {
                         MediaTypeHeaderValue.Parse("text/foo;p1=p1-value"),
+                        "κόσμε",
                         "text/foo; p1=p1-value; charset=utf-8",
-                        new byte[] { 97, 98, 99, 100 } //utf-8 without BOM
+                        new byte[] { 206, 186, 225, 189, 185, 207, 131, 206, 188, 206, 181 } //utf-8 without BOM
                     },
                     {
                         new MediaTypeHeaderValue("text/foo") { Encoding = Encoding.ASCII },
+                        "abcd",
                         "text/foo; charset=us-ascii",
                         new byte[] { 97, 98, 99, 100 }
                     }
@@ -113,13 +117,14 @@ namespace Microsoft.AspNet.Mvc
         [MemberData(nameof(ContentResultContentTypeData))]
         public async Task ContentResult_SetContentTypeAndEncoding(
             MediaTypeHeaderValue contentType,
+            string content,
             string expectedContentType,
             byte[] expectedContentData)
         {
             // Arrange
             var contentResult = new ContentResult
             {
-                Content = "abcd",
+                Content = content,
                 ContentType = contentType
             };
             var httpContext = GetHttpContext();

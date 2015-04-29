@@ -118,7 +118,7 @@ namespace Microsoft.AspNet.Mvc
             // Arrange
             var expectedContentType = "text/foo; charset=us-ascii";
             // path will be C:/.../TestFiles/FilePathResultTestFile.txt
-            var path = Path.GetFullPath(Path.Combine(".", "TestFiles", "FilePathResultTestFile.txt"));
+            var path = Path.GetFullPath(Path.Combine(".", "TestFiles", "FilePathResultTestFile_ASCII.txt"));
             path = path.Replace(@"\", "/");
 
             // Point the FileProviderRoot to a subfolder
@@ -128,18 +128,17 @@ namespace Microsoft.AspNet.Mvc
             };
 
             var httpContext = new DefaultHttpContext();
-            httpContext.Response.Body = new MemoryStream();
+            var memoryStream = new MemoryStream();
+            httpContext.Response.Body = memoryStream;
 
             var context = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
 
             // Act
             await result.ExecuteResultAsync(context);
-            httpContext.Response.Body.Position = 0;
 
             // Assert
-            Assert.NotNull(httpContext.Response.Body);
-            var contents = await new StreamReader(httpContext.Response.Body).ReadToEndAsync();
-            Assert.Equal("FilePathResultTestFile contents", contents);
+            var contents = Encoding.ASCII.GetString(memoryStream.ToArray());
+            Assert.Equal("FilePathResultTestFile contents ASCII encoded", contents);
             Assert.Equal(expectedContentType, httpContext.Response.ContentType);
         }
 

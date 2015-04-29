@@ -128,7 +128,7 @@ namespace Microsoft.AspNet.Mvc
             Assert.NotNull(result);
 
             var fileContentResult = Assert.IsType<FileContentResult>(result);
-            Assert.Equal(contentType, fileContentResult.ContentType?.ToString());
+            Assert.Equal(contentType, fileContentResult.ContentType.ToString());
             Assert.Equal(fileName ?? string.Empty, fileContentResult.FileDownloadName);
 
             if (content == null)
@@ -162,7 +162,7 @@ namespace Microsoft.AspNet.Mvc
             Assert.NotNull(result);
 
             var fileStreamResult = Assert.IsType<FileStreamResult>(result);
-            Assert.Equal(contentType, fileStreamResult.ContentType?.ToString());
+            Assert.Equal(contentType, fileStreamResult.ContentType.ToString());
             Assert.Equal(fileName ?? string.Empty, fileStreamResult.FileDownloadName);
 
             if (content == null)

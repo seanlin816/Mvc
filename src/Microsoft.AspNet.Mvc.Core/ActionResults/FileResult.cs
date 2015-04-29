@@ -24,7 +24,7 @@ namespace Microsoft.AspNet.Mvc
         /// the provided <paramref name="contentType"/>.
         /// </summary>
         /// <param name="contentType">The Content-Type header of the response.</param>
-        protected FileResult(string contentType)
+        protected FileResult([NotNull] string contentType)
             : this(new MediaTypeHeaderValue(contentType))
         {
         }
@@ -42,7 +42,7 @@ namespace Microsoft.AspNet.Mvc
         /// <summary>
         /// Gets or sets the Content-Type header value that will be written to the response.
         /// </summary>
-        public MediaTypeHeaderValue ContentType { get; set; }
+        public MediaTypeHeaderValue ContentType { get; }
 
         /// <summary>
         /// Gets the file name that will be used in the Content-Disposition header of the response.

@@ -48,7 +48,7 @@ namespace Microsoft.AspNet.Mvc
         }
 
         [Fact]
-        public async Task SetsSuppliedContentTypeAndEncoding()
+        public async Task ExecuteResultAsync_SetsSuppliedContentTypeAndEncoding()
         {
             // Arrange
             var expectedContentType = "text/foo; charset=us-ascii";
