@@ -19,7 +19,7 @@ namespace Microsoft.AspNet.Mvc
         private const int BufferSize = 1024;
         private static readonly MediaTypeHeaderValue DefaultContentType = new MediaTypeHeaderValue("text/html")
         {
-            Charset = Encodings.UTF8EncodingWithoutBOM.WebName
+            Encoding = Encoding.UTF8
         };
 
         /// <summary>
@@ -38,52 +38,35 @@ namespace Microsoft.AspNet.Mvc
         {
             var response = actionContext.HttpContext.Response;
 
-            MediaTypeHeaderValue contentTypeHeader = contentType;
+            var contentTypeHeader = contentType;
             Encoding encoding;
             if (contentTypeHeader == null)
             {
                 contentTypeHeader = DefaultContentType;
-                encoding = Encodings.UTF8EncodingWithoutBOM;
+                encoding = DefaultContentType.Encoding;
             }
             else
             {
-                if (string.IsNullOrEmpty(contentTypeHeader.Charset))
+                if (contentTypeHeader.Encoding == null)
                 {
-                    encoding = Encodings.UTF8EncodingWithoutBOM;
-
                     // 1. Do not modify the user supplied content type
                     // 2. Parse here to handle parameters apart from charset
                     contentTypeHeader = MediaTypeHeaderValue.Parse(contentTypeHeader.ToString());
-                    contentTypeHeader.Charset = encoding.WebName;
+                    contentTypeHeader.Encoding = Encoding.UTF8;
                 }
-                else
-                {
-                    if(string.Equals(
-                        contentTypeHeader.Charset,
-                        Encodings.UTF8EncodingWithoutBOM.WebName,
-                        StringComparison.OrdinalIgnoreCase))
-                    {
-                        encoding = Encodings.UTF8EncodingWithoutBOM;
-                    }
-                    else if(string.Equals(
-                        contentTypeHeader.Charset,
-                        Encodings.UTF16EncodingLittleEndian.WebName,
-                        StringComparison.OrdinalIgnoreCase))
-                    {
-                        encoding = Encodings.UTF16EncodingLittleEndian;
-                    }
-                    else
-                    {
-                        encoding = new ResponseEncodingWrapper(Encoding.GetEncoding(contentTypeHeader.Charset));
-                    }
-                }
+
+                encoding = contentTypeHeader.Encoding;
             }
 
             response.ContentType = contentTypeHeader.ToString();
 
             var wrappedStream = new StreamWrapper(response.Body);
 
-            using (var writer = new StreamWriter(wrappedStream, encoding, BufferSize, leaveOpen: true))
+            using (var writer = new StreamWriter(
+                wrappedStream,
+                new ResponseEncodingWrapper(encoding),
+                BufferSize,
+                leaveOpen: true))
             {
                 try
                 {

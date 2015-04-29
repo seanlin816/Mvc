@@ -64,9 +64,9 @@ namespace Microsoft.AspNet.Mvc
             var contentResult = new ContentResult
             {
                 Content = null,
-                ContentType = new MediaTypeHeaderValue("application/json")
+                ContentType = new MediaTypeHeaderValue("text/plain")
                 {
-                    Encoding = Encoding.UTF8
+                    Encoding = Encoding.UTF7
                 }
             };
             var httpContext = GetHttpContext();
@@ -76,7 +76,7 @@ namespace Microsoft.AspNet.Mvc
             await contentResult.ExecuteResultAsync(actionContext);
 
             // Assert
-            Assert.Equal("application/json; charset=utf-8", httpContext.Response.ContentType);
+            Assert.Equal("text/plain; charset=utf-7", httpContext.Response.ContentType);
         }
 
         public static TheoryData<MediaTypeHeaderValue, string, byte[]> ContentResultContentTypeData
