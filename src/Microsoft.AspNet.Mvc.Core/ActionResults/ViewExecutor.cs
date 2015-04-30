@@ -62,6 +62,9 @@ namespace Microsoft.AspNet.Mvc
 
             var wrappedStream = new StreamWrapper(response.Body);
 
+            // StreamWriter writes the preamble or BOM bytes to the response if the encoding requires it.
+            // Since preamble bytes are unnecessary when generating dynamic content, wrap the original encoding
+            // to avoid writing the preamble bytes.
             using (var writer = new StreamWriter(
                 wrappedStream,
                 new ResponseEncodingWrapper(encoding),

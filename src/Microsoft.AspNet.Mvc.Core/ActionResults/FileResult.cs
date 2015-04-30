@@ -40,7 +40,7 @@ namespace Microsoft.AspNet.Mvc
         }
 
         /// <summary>
-        /// Gets or sets the Content-Type header value that will be written to the response.
+        /// Gets the <see cref="MediaTypeHeaderValue"/> representing the Content-Type header of the response.
         /// </summary>
         public MediaTypeHeaderValue ContentType { get; }
 

@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.FileProviders;
@@ -9,10 +10,9 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Routing;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 using Moq;
 using Xunit;
-using System.Text;
-using Microsoft.Net.Http.Headers;
 
 namespace Microsoft.AspNet.Mvc
 {
@@ -117,7 +117,7 @@ namespace Microsoft.AspNet.Mvc
         {
             // Arrange
             var expectedContentType = "text/foo; charset=us-ascii";
-            // path will be C:/.../TestFiles/FilePathResultTestFile.txt
+            // path will be C:/.../TestFiles/FilePathResultTestFile_ASCII.txt
             var path = Path.GetFullPath(Path.Combine(".", "TestFiles", "FilePathResultTestFile_ASCII.txt"));
             path = path.Replace(@"\", "/");
 
