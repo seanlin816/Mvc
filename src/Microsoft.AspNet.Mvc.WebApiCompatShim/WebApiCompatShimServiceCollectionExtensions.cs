@@ -16,7 +16,8 @@ namespace Microsoft.Framework.DependencyInjection
 
             // The constructors on DefaultContentNegotiator aren't DI friendly, so just
             // new it up.
-            services.AddInstance<IContentNegotiator>(new DefaultContentNegotiator());
+            services.TryAdd(ServiceDescriptor.Instance<IContentNegotiator>(new DefaultContentNegotiator()));
+
             services.Configure<MvcOptions>(options =>
             {
                 options.ValidationExcludeFilters.Add(typeof(HttpRequestMessage));
