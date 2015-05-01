@@ -35,8 +35,8 @@ namespace Microsoft.Framework.DependencyInjection
             ConfigureDefaultServices(services);
 
             // Options and core services.
-            services.TryAdd(ServiceDescriptor.Transient<IConfigureOptions<MvcOptions>, MvcOptionsSetup>());
-            services.TryAdd(
+            services.Add(ServiceDescriptor.Transient<IConfigureOptions<MvcOptions>, MvcOptionsSetup>());
+            services.Add(
                 ServiceDescriptor.Transient<IConfigureOptions<RazorViewEngineOptions>, RazorViewEngineOptionsSetup>());
 
             services.TryAdd(ServiceDescriptor.Transient<IAssemblyProvider, DefaultAssemblyProvider>());
@@ -62,7 +62,7 @@ namespace Microsoft.Framework.DependencyInjection
 
             // This provider needs access to the per-request services, but might be used many times for a given
             // request.
-            services.TryAdd(ServiceDescriptor.Transient<IActionConstraintProvider, DefaultActionConstraintProvider>());
+            services.Add(ServiceDescriptor.Transient<IActionConstraintProvider, DefaultActionConstraintProvider>());
 
             services.TryAdd(ServiceDescriptor
                 .Singleton<IActionSelectorDecisionTreeProvider, ActionSelectorDecisionTreeProvider>());
@@ -76,10 +76,10 @@ namespace Microsoft.Framework.DependencyInjection
                 return new DefaultObjectValidator(options.ValidationExcludeFilters, modelMetadataProvider);
             }));
 
-            services.TryAdd(ServiceDescriptor
+            services.Add(ServiceDescriptor
                 .Transient<IActionDescriptorProvider, ControllerActionDescriptorProvider>());
 
-            services.TryAdd(ServiceDescriptor.Transient<IActionInvokerProvider, ControllerActionInvokerProvider>());
+            services.Add(ServiceDescriptor.Transient<IActionInvokerProvider, ControllerActionInvokerProvider>());
 
             services.TryAdd(ServiceDescriptor
                 .Singleton<IActionDescriptorsCollectionProvider, DefaultActionDescriptorsCollectionProvider>());
@@ -87,7 +87,7 @@ namespace Microsoft.Framework.DependencyInjection
             // The IGlobalFilterProvider is used to build the action descriptors (likely once) and so should
             // remain transient to avoid keeping it in memory.
             services.TryAdd(ServiceDescriptor.Transient<IGlobalFilterProvider, DefaultGlobalFilterProvider>());
-            services.TryAdd(ServiceDescriptor.Transient<IFilterProvider, DefaultFilterProvider>());
+            services.Add(ServiceDescriptor.Transient<IFilterProvider, DefaultFilterProvider>());
 
             services.TryAdd(ServiceDescriptor.Transient<FormatFilter, FormatFilter>());
             services.TryAdd(ServiceDescriptor.Transient<CorsAuthorizationFilter, CorsAuthorizationFilter>());
@@ -178,7 +178,7 @@ namespace Microsoft.Framework.DependencyInjection
             // Api Description
             services.TryAdd(ServiceDescriptor
                 .Singleton<IApiDescriptionGroupCollectionProvider, ApiDescriptionGroupCollectionProvider>());
-            services.TryAdd(ServiceDescriptor.Transient<IApiDescriptionProvider, DefaultApiDescriptionProvider>());
+            services.Add(ServiceDescriptor.Transient<IApiDescriptionProvider, DefaultApiDescriptionProvider>());
 
             // Temp Data
             services.TryAdd(ServiceDescriptor.Scoped<ITempDataDictionary, TempDataDictionary>());
