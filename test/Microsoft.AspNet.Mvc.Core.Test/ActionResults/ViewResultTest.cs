@@ -110,6 +110,7 @@ namespace Microsoft.AspNet.Mvc
             var context = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
             var viewEngine = new Mock<IViewEngine>();
             var view = Mock.Of<IView>();
+            var contentTypeBeforeViewResultExecution = contentType?.ToString();
 
             viewEngine.Setup(e => e.FindView(context, "myview"))
                       .Returns(ViewEngineResult.Found("myview", view));
@@ -126,6 +127,12 @@ namespace Microsoft.AspNet.Mvc
 
             // Assert
             Assert.Equal(expectedContentTypeHeaderValue, httpContext.Response.ContentType);
+
+            // Check if the original instance provided by the user has not changed.
+            // Since we do not have access to the new instance created within the view executor,
+            // check if at least the content is the same.
+            var contentTypeAfterViewResultExecution = contentType?.ToString();
+            Assert.Equal(contentTypeBeforeViewResultExecution, contentTypeAfterViewResultExecution);
         }
 
         [Fact]
